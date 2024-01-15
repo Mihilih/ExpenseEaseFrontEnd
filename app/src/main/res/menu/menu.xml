@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/overviewItem"
+        android:enabled="true"
+        android:icon="@drawable/overview"
+        android:title="Overview" />
+    <item
+        android:id="@+id/expenseItem"
+        android:enabled="true"
+        android:icon="@drawable/expense"
+        android:title="Expenses" />
+    <item
+        android:id="@+id/incomeItem"
+        android:enabled="true"
+        android:icon="@drawable/income"
+        android:title="Income" />
+    <item
+        android:id="@+id/profileItem"
+        android:enabled="true"
+        android:icon="@drawable/profile"
+        android:title="Profile" />
+</menu>
