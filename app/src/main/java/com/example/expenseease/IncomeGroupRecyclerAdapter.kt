@@ -30,7 +30,7 @@ class IncomeGroupRecyclerAdapter(private var dataset: List<Pair<String, List<Inc
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val group = dataset[position]
-        holder.date.text = dataset[position].first
+        holder.date.text = dataset[position].first.substringBefore(" ")
         val adapter = IncomeRecyclerAdapter(dataset[position].second)
         holder.incomes.adapter = adapter
         holder.incomes.layoutManager = LinearLayoutManager(holder.date.context)

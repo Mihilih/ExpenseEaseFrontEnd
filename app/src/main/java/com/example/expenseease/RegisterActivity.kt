@@ -68,6 +68,7 @@ class RegisterActivity : AppCompatActivity() {
                                 //parse and store session details
                                 val instance = SessionRepository(context = this@RegisterActivity)
                                 instance.storeData(res)
+                                instance.updateUser()
                                 val intent = Intent(this@RegisterActivity, MainActivity::class.java)
                                 startActivity(intent)
                             }else{

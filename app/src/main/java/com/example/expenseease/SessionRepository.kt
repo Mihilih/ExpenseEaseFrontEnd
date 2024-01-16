@@ -27,7 +27,7 @@ data class SessionRepository@Inject constructor(val context: Context){
 
         val request = Request.Builder()
             .url(url)
-            .header("Authorization", "Bearer"+ (getSessionToken() ?:""))
+            .header("Authorization", "Bearer "+ (getSessionToken() ?:""))
             .build()
         val response = client.newCall(request).enqueue(object :okhttp3.Callback{
             override fun onFailure(call: Call, e: IOException) {

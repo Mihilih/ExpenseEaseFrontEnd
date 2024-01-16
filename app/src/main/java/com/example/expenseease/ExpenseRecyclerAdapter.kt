@@ -37,7 +37,7 @@ class ExpenseRecyclerAdapter(private var dataset: List<Expense>): RecyclerView.A
         val expense  = dataset[position]
         holder.name.text = expense.name
         holder.description.text = expense.description
-        holder.amount.text = expense.amount.toString()
+        holder.amount.text = "$${expense.amount.toString()}"
         holder.category.text = expense.category.toString()
         //get category name instead but this is fine for now
 

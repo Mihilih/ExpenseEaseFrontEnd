@@ -57,7 +57,7 @@ class LoginActivity : AppCompatActivity() {
                                 //parse and store session details
                                 val instance = SessionRepository(context = this@LoginActivity)
                                 instance.storeData(res)
-                                Log.e("LOGLOGLOG", instance.getUpdateToken())
+                                Log.e("LOGLOGLOG", instance.getSessionToken())
 
                                 instance.updateUser()
 

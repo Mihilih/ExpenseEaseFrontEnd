@@ -1,5 +1,6 @@
 package com.example.expenseease
 
+import android.content.Intent
 import android.os.Bundle
 import android.graphics.Color
 import androidx.fragment.app.Fragment
@@ -7,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.graphics.Typeface
+import android.util.Log
 import android.widget.Button
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
@@ -19,6 +22,11 @@ import com.github.mikephil.charting.utils.MPPointF
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
+import okhttp3.Call
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import java.io.IOException
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -50,65 +58,13 @@ class OverviewFragment : Fragment() {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_overview, container, false)
         val pieChart: PieChart = view.findViewById(R.id.chart)
-
-
-        val expenses = arrayListOf(
-            Expense(
-                id = 1,
-                name = "groceries",
-                description = "snacks and shit",
-                amount = 90,
-                date = "2024-04-12",
-                user = 1,
-                category = 2
-            ),
-            Expense(
-                id = 2,
-                name = "books",
-                description = "school books",
-                amount = 70,
-                date = "2024-04-12",
-                user = 1,
-                category = 2
-            ),
-            Expense(
-                id = 3,
-                name = "CUHealth",
-                description = "I was sick",
-                amount = 50,
-                date = "2024-05-12",
-                user = 1,
-                category = 2
-            ),
-            Expense(
-                id = 4,
-                name = "CUHealth",
-                description = "I was sick",
-                amount = 20,
-                date = "2024-05-12",
-                user = 1,
-                category = 2
-            ),
-            Expense(
-                id = 5,
-                name = "CUHealth",
-                description = "I was sick",
-                amount = 40,
-                date = "2024-05-12",
-                user= 1,
-                category = 2
-            ),
-            Expense(
-                id = 6,
-                name = "CUHealth",
-                description = "I was sick",
-                amount = 100,
-                date = "2024-05-12",
-                user= 1,
-                category = 2
-            ),
-        )
-
+        val instance = getActivity()?.let { it1 -> SessionRepository(context = it1.getApplicationContext()) }
+        var expenses = listOf<Expense>()
+        val user = instance?.getUser()
+        if (user != null) {
+            expenses = user.expenses
+            Log.e("LOGLOGLOG", expenses.toString())
+        }
 
 
         pieChart.setUsePercentValues(true)
@@ -135,9 +91,38 @@ class OverviewFragment : Fragment() {
 
         pieChart.legend.isEnabled = false
 
-        val entries: ArrayList<PieEntry> = ArrayList()
+
+        expenses.sortedBy { it.category }
+        val expenseGroup = arrayListOf<Pair<String, Int>>()
+        var group = arrayListOf<Expense>()
+        var sum = 0
+        var currentcat = 0
+        if (!group.isEmpty()){
+            currentcat = expenses.first().category
+        }
         for (expense in expenses){
-            entries.add(PieEntry(expense.amount.toFloat(), expense.name))
+            if (expense.category==currentcat){
+                group.add(expense)
+                sum = sum + expense.amount
+            }else{
+                if (!group.isEmpty()){
+                    expenseGroup.add(Pair<String, Int>(currentcat.toString(),sum))
+                }
+                currentcat=expense.category
+                group = arrayListOf<Expense>()
+                sum = expense.amount
+                group.add(expense)
+            }
+        }
+        if (!group.isEmpty()) {
+            expenseGroup.add(Pair<String, Int>(currentcat.toString(), sum))
+        }
+        Log.e("LOGLOGLOG", expenseGroup.toString())
+
+
+        val entries: ArrayList<PieEntry> = ArrayList()
+        for (expense in expenseGroup){
+            entries.add(PieEntry(expense.second.toFloat(), expense.first))
         }
 
         val dataSet = PieDataSet(entries, "Mobile OS")
@@ -166,16 +151,46 @@ class OverviewFragment : Fragment() {
         pieChart.setData(data)
         pieChart.setEntryLabelTypeface(typeface)
         pieChart.highlightValues(null)
-
         pieChart.invalidate()
 
-
         val addButton: Button = view.findViewById(R.id.newButton)
-
+        val categoryButton: Button = view.findViewById(R.id.categoryButton)
+        val emailButton: Button = view.findViewById(R.id.emailButton)
         addButton.setOnClickListener{
 
             val newFragment = NewExpenseFragment()
             activity?.let { it1 -> newFragment.show(it1.supportFragmentManager, "Availabilities") }
+        }
+
+        categoryButton.setOnClickListener{
+
+        }
+        emailButton.setOnClickListener{
+            val client = OkHttpClient()
+            val url = "http://34.29.154.243/api/email/"
+            val instance = getActivity()?.let { it1 -> SessionRepository(context = it1.getApplicationContext()) }
+
+            val request = Request.Builder()
+                .url(url)
+                .header("Authorization", "Bearer "+ (instance?.getSessionToken() ?:""))
+                .build()
+            val response = client.newCall(request).enqueue(object :okhttp3.Callback{
+                override fun onFailure(call: Call, e: IOException) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val res = response.body?.string()
+
+                    if (res != null) {
+                        Log.e("LOGLOGLOG", res)
+                    }
+                    activity?.runOnUiThread{
+                        Toast.makeText(activity?.applicationContext, "Sent email report successfully", Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+            })
         }
 
         return view

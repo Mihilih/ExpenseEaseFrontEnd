@@ -10,7 +10,13 @@ class OnboardingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_onboarding)
-
+        val instance = SessionRepository(context = this@OnboardingActivity)
+        instance.updateUser()
+        val user = instance.getUser()
+        if (instance.getSessionToken()!=""){
+            val intent = Intent(this@OnboardingActivity, MainActivity::class.java)
+            startActivity(intent)
+        }
         val loginButton: Button = findViewById(R.id.button)
         val alternateText: TextView = findViewById(R.id.alternateText)
 

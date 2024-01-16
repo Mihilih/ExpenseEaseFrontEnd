@@ -52,33 +52,13 @@ class IncomeFragment : Fragment() {
         val recycler : RecyclerView = view.findViewById(R.id.incomeRecyclerView)
         var incomes = listOf<Income>()
 
-        val client = OkHttpClient()
-        val url = "http://34.29.154.243/"
         val instance = getActivity()?.let { it1 -> SessionRepository(context = it1.getApplicationContext()) }
 
-        val request = Request.Builder()
-            .url(url)
-            .header("Authorization", "Bearer"+ (instance?.getSessionToken() ?:""))
-            .build()
-        val response = client.newCall(request).enqueue(object :okhttp3.Callback{
-            override fun onFailure(call: Call, e: IOException) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                val res = response.body?.string()
-
-                if (res != null) {
-                    Log.e("LOGLOGLOG", res)
-                }
-                val user = parsePerson(res)
-                if (user != null) {
-                    incomes = user.incomes
-                }
-
-            }
-        })
-
+        val user = instance?.getUser()
+        if (user != null) {
+            incomes = user.incomes
+            Log.e("LOGLOGLOG", incomes.toString())
+        }
 
         val incomeGroup = arrayListOf<Pair<String, List<Income>>>()
         var group = arrayListOf<Income>()
@@ -91,7 +71,9 @@ class IncomeFragment : Fragment() {
             if (income.date==currentDate){
                 group.add(income)
             }else{
-                incomeGroup.add(Pair<String, List<Income>>(currentDate,group))
+                if (!group.isEmpty()){
+                    incomeGroup.add(Pair<String, List<Income>>(currentDate,group))
+                }
                 currentDate=income.date
                 group = arrayListOf<Income>()
                 group.add(income)
@@ -99,9 +81,9 @@ class IncomeFragment : Fragment() {
         }
 
 
-
-        incomeGroup.add(Pair<String, List<Income>>(currentDate,group))
-
+        if (!group.isEmpty()) {
+            incomeGroup.add(Pair<String, List<Income>>(currentDate, group))
+        }
         val adapter = IncomeGroupRecyclerAdapter(incomeGroup)
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(context)

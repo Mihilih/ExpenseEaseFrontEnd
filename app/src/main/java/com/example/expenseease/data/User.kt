@@ -5,6 +5,7 @@ data class User(
     var first_name: String,
     var last_name: String,
     var email: String,
+    var username: String,
     var current_balance: Int,
     var categories: List<Category>,
     var expenses: List<Expense>,

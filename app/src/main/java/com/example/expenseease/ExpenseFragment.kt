@@ -49,8 +49,6 @@ class ExpenseFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_expense, container, false)
         val recycler : RecyclerView = view.findViewById(R.id.expenseRecyclerView)
         var expenses = listOf<Expense>()
-        val client = OkHttpClient()
-        val url = "http://34.29.154.243/"
         val instance = getActivity()?.let { it1 -> SessionRepository(context = it1.getApplicationContext()) }
 
         val user = instance?.getUser()
@@ -70,13 +68,17 @@ class ExpenseFragment : Fragment() {
             if (expense.date==currentDate){
                 group.add(expense)
             }else{
-                expenseGroup.add(Pair<String, List<Expense>>(currentDate,group))
+                if (!group.isEmpty()){
+                    expenseGroup.add(Pair<String, List<Expense>>(currentDate,group))
+                }
                 currentDate=expense.date
                 group = arrayListOf<Expense>()
                 group.add(expense)
             }
         }
-        expenseGroup.add(Pair<String, List<Expense>>(currentDate,group))
+        if (!group.isEmpty()) {
+            expenseGroup.add(Pair<String, List<Expense>>(currentDate, group))
+        }
         val adapter = ExpenseGroupRecyclerAdapter(expenseGroup)
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(context)

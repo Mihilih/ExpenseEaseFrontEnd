@@ -1,6 +1,7 @@
 package com.example.expenseease
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -120,7 +121,7 @@ class NewExpenseFragment() : DialogFragment() {
         autoComplete.onItemClickListener = AdapterView.OnItemClickListener {
                 adapterView, view, i, l ->
             val itemSelected = adapterView.getItemAtPosition(i)
-            isexpense = itemSelected != "income"
+            isexpense = itemSelected != "Income"
         }
 
         val saveButton: Button = view.findViewById(R.id.saveButton)
@@ -129,44 +130,57 @@ class NewExpenseFragment() : DialogFragment() {
             dismiss()
         }
         saveButton.setOnClickListener {
-            val user = instance?.getUser()
-            val client = OkHttpClient()
-            var url1 = "http://34.29.154.243/api/expense/"
-            if (!isexpense){
-                url1="http://34.29.154.243/api/income/"
-            }
-            val body: JSONObject = JSONObject()
-            body.put("name", name.text.toString())
-            if (user != null) {
-                body.put("user", user.id)
-            }
-            body.put("description", description.text.toString())
-            body.put("category", cat)
-            body.put("amount", amount.text.toString())
-            Log.e("LOGLOGLOG", body.toString())
-            val request = Request.Builder()
-                .url(url1)
-                .post(body.toString().toRequestBody(RegisterActivity.MEDIA_TYPE_JSON))
-                .header("Authorization", "Bearer"+ (instance?.getSessionToken() ?:""))
-                .build()
-            val response = client.newCall(request).enqueue(object :okhttp3.Callback{
-                override fun onFailure(call: Call, e: IOException) {
-                    TODO("Not yet implemented")
+            try{
+                val check = amount.text.toString().toInt()
+                val user = instance?.getUser()
+                val client = OkHttpClient()
+                var url1 = "http://34.29.154.243/api/expense/"
+                if (!isexpense){
+                    url1="http://34.29.154.243/api/income/"
                 }
-
-                override fun onResponse(call: Call, response: Response) {
-                    val res = response.body?.string()
-
-                    if (res != null) {
-                        Log.e("LOGLOGLOG", res)
-                        if (!res.contains("error")){
-                            instance?.updateUser()
-                            dismiss()
-                        }
+                Log.e("LOGLOGLOG", isexpense.toString())
+                val body: JSONObject = JSONObject()
+                body.put("name", name.text.toString())
+                if (user != null) {
+                    body.put("user", user.id)
+                }
+                body.put("description", description.text.toString())
+                body.put("category", cat)
+                body.put("amount", amount.text.toString().toInt())
+                Log.e("LOGLOGLOG", body.toString())
+                val request = Request.Builder()
+                    .url(url1)
+                    .header("Authorization", "Bearer "+ (instance?.getSessionToken() ?:""))
+                    .post(body.toString().toRequestBody(RegisterActivity.MEDIA_TYPE_JSON))
+                    .build()
+                val response = client.newCall(request).enqueue(object :okhttp3.Callback{
+                    override fun onFailure(call: Call, e: IOException) {
+                        Log.e("LOGLOGLOG", e.toString())
                     }
 
+                    override fun onResponse(call: Call, response: Response) {
+                        val res = response.body?.string()
+
+                        if (res != null) {
+                            Log.e("LOGLOGLOG", res)
+                            Log.e("LOGLOGLOG", instance?.getSessionToken() ?:"")
+                            if (!res.contains("error")){
+                                instance?.updateUser()
+                                dismiss()
+                            }else if (res.contains("Authorization") or res.contains("session")){
+                                val intent = Intent(activity?.applicationContext, OnboardingActivity::class.java)
+                                startActivity(intent)
+                            }
+                        }
+
+                    }
+                })
+            }catch (x:Exception){
+                activity?.runOnUiThread{
+                    Toast.makeText(activity?.applicationContext, "Enter valid amount", Toast.LENGTH_SHORT).show()
                 }
-            })
+            }
+
 
 
         }

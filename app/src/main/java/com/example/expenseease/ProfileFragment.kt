@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import com.example.expenseease.data.ConfirmActivity
 import com.example.expenseease.data.User
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
@@ -62,7 +63,7 @@ class ProfileFragment : Fragment() {
         val instance = activity?.let { SessionRepository(context = it.applicationContext) }
         val user = instance?.getUser()
         name.text = "${user?.first_name} ${user?.last_name}"
-        username.text = "@${user?.email}"
+        username.text = "@${user?.username}"
         amt.text = "$${user?.current_balance}!!!"
 
         logoutButton.setOnClickListener(){
@@ -72,7 +73,7 @@ class ProfileFragment : Fragment() {
 
             val request = Request.Builder()
                 .url(url)
-                .header("Authorization", "Bearer"+ (instance?.getSessionToken() ?:""))
+                .header("Authorization", "Bearer "+ (instance?.getSessionToken() ?:""))
                 .build()
             val response = client.newCall(request).enqueue(object :okhttp3.Callback{
                 override fun onFailure(call: Call, e: IOException) {
@@ -95,22 +96,11 @@ class ProfileFragment : Fragment() {
             })
         }
 
-
-        return view
-    }
-
-    private fun parsePerson(res : String?): User? {
-        try{
-            val moshi = Moshi.Builder().addLast(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory()).build()
-            val jsonAdapter: JsonAdapter<User> = moshi.adapter(User::class.java)
-            val parsedUser =  jsonAdapter.fromJson(res)
-            Log.e("LOGLOGLOG", "success")
-            Log.e("LOGLOGLOG", parsedUser.toString())
-            return parsedUser
-        }catch (x:Exception){
-            Log.e("error", x.toString())
-            return null
+        deleteButton.setOnClickListener{
+            val intent =  getActivity()?.let { it1 ->Intent(it1.getApplicationContext(), ConfirmActivity::class.java)}
+            startActivity(intent)
         }
+        return view
     }
 
     companion object {
