@@ -1,5 +1,6 @@
 package com.example.expenseease
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,11 +18,13 @@ class IncomeRecyclerAdapter(private var dataset: List<Income>): RecyclerView.Ada
         val amount: TextView
         val description: TextView
         val category: TextView
+        val card: CardView
         init{
             name = view.findViewById(R.id.name)
             amount = view.findViewById(R.id.amount)
             description = view.findViewById(R.id.description)
             category = view.findViewById(R.id.category)
+            card = view.findViewById(R.id.card)
         }
     }
 
@@ -44,7 +47,17 @@ class IncomeRecyclerAdapter(private var dataset: List<Income>): RecyclerView.Ada
         holder.amount.text = "$${income.amount.toString()}"
         holder.category.text = income.category.toString()
         holder.category.text = instance?.getCategories()?.filter { it.id==income.category }?.first()?.name.toString()
-        //get category name instead but this is fine for now
+        holder.card.setOnClickListener{
+            val intent =  Intent(holder.card.context, IndividualIncomeExpense::class.java)
+            intent.putExtra("name", income.name)
+            intent.putExtra("description", income.description)
+            intent.putExtra("category", income.category)
+            intent.putExtra("amount", income.amount)
+            intent.putExtra("id", income.id)
+            intent.putExtra("date", income.date)
+            intent.putExtra("isexpense", false)
+            holder.card.context.startActivity(intent)
+        }
 
     }
 

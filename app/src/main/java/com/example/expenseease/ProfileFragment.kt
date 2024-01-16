@@ -9,18 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import com.example.expenseease.data.ConfirmActivity
-import com.example.expenseease.data.User
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-import org.json.JSONObject
 import java.io.IOException
 
 // TODO: Rename parameter arguments, choose names that match
@@ -61,6 +54,7 @@ class ProfileFragment : Fragment() {
 
 
         val instance = activity?.let { SessionRepository(context = it.applicationContext) }
+        instance?.updateUser()
         val user = instance?.getUser()
         name.text = "${user?.first_name} ${user?.last_name}"
         username.text = "@${user?.username}"
@@ -98,6 +92,18 @@ class ProfileFragment : Fragment() {
 
         deleteButton.setOnClickListener{
             val intent =  getActivity()?.let { it1 ->Intent(it1.getApplicationContext(), ConfirmActivity::class.java)}
+            startActivity(intent)
+        }
+
+        editButton.setOnClickListener{
+            val intent =  getActivity()?.let { it1 ->Intent(it1.getApplicationContext(), RegisterActivity::class.java)}
+            intent?.putExtra("first_name", user?.first_name)
+            intent?.putExtra("last_name", user?.last_name)
+            intent?.putExtra("username", user?.username)
+            intent?.putExtra("email", user?.email)
+            intent?.putExtra("amount", user?.current_balance)
+            intent?.putExtra("id", user?.id)
+            Log.e("LOGLOGLOG" ,intent?.extras.toString())
             startActivity(intent)
         }
         return view

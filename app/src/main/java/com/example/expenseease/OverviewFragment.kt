@@ -1,6 +1,5 @@
 package com.example.expenseease
 
-import android.content.Intent
 import android.os.Bundle
 import android.graphics.Color
 import androidx.fragment.app.Fragment
@@ -12,8 +11,6 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentManager
 import com.example.expenseease.data.Expense
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.animation.Easing

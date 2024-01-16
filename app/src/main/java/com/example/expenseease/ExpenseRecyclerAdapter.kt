@@ -1,5 +1,6 @@
 package com.example.expenseease
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.expenseease.data.ConfirmActivity
 import com.example.expenseease.data.Expense
 
 class ExpenseRecyclerAdapter(private var dataset: List<Expense>): RecyclerView.Adapter<ExpenseRecyclerAdapter.ViewHolder>()  {
@@ -18,11 +20,13 @@ class ExpenseRecyclerAdapter(private var dataset: List<Expense>): RecyclerView.A
         val amount: TextView
         val description: TextView
         val category: TextView
+        val card: CardView
         init{
             name = view.findViewById(R.id.name)
             amount = view.findViewById(R.id.amount)
             description = view.findViewById(R.id.description)
             category = view.findViewById(R.id.category)
+            card = view.findViewById(R.id.card)
         }
     }
 
@@ -44,8 +48,17 @@ class ExpenseRecyclerAdapter(private var dataset: List<Expense>): RecyclerView.A
         holder.description.text = expense.description
         holder.amount.text = "$${expense.amount.toString()}"
         holder.category.text = instance?.getCategories()?.filter { it.id==expense.category }?.first()?.name.toString()
-
-        //get category name instead but this is fine for now
+        holder.card.setOnClickListener{
+            val intent =  Intent(holder.card.context, IndividualIncomeExpense::class.java)
+            intent.putExtra("name", expense.name)
+            intent.putExtra("description", expense.description)
+            intent.putExtra("category", expense.category)
+            intent.putExtra("amount", expense.amount)
+            intent.putExtra("id", expense.id)
+            intent.putExtra("date", expense.date)
+            intent.putExtra("isexpense", false)
+            holder.card.context.startActivity(intent)
+        }
 
     }
 

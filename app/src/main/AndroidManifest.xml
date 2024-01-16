@@ -17,6 +17,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".EditIncomeExpense"
+            android:exported="false" />
+        <activity
+            android:name=".IndividualIncomeExpense"
+            android:exported="false" />
+        <activity
             android:name=".data.ConfirmActivity"
             android:exported="false" />
         <activity
