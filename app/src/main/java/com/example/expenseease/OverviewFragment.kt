@@ -92,7 +92,8 @@ class OverviewFragment : Fragment() {
         pieChart.legend.isEnabled = false
 
 
-        expenses.sortedBy { it.category }
+        expenses = expenses.sortedBy { it.category }
+        Log.e("LOGLOGLOGE", expenses.toString())
         val expenseGroup = arrayListOf<Pair<String, Int>>()
         var group = arrayListOf<Expense>()
         var sum = 0
@@ -106,7 +107,8 @@ class OverviewFragment : Fragment() {
                 sum = sum + expense.amount
             }else{
                 if (!group.isEmpty()){
-                    expenseGroup.add(Pair<String, Int>(currentcat.toString(),sum))
+                    val cat = instance?.getCategories()?.filter { it.id==currentcat }?.first()
+                    expenseGroup.add(Pair<String, Int>(cat?.name.toString(),sum))
                 }
                 currentcat=expense.category
                 group = arrayListOf<Expense>()
@@ -115,7 +117,8 @@ class OverviewFragment : Fragment() {
             }
         }
         if (!group.isEmpty()) {
-            expenseGroup.add(Pair<String, Int>(currentcat.toString(), sum))
+            val cat = instance?.getCategories()?.filter { it.id==currentcat }?.first()
+            expenseGroup.add(Pair<String, Int>(cat?.name.toString(), sum))
         }
         Log.e("LOGLOGLOG", expenseGroup.toString())
 
@@ -159,11 +162,12 @@ class OverviewFragment : Fragment() {
         addButton.setOnClickListener{
 
             val newFragment = NewExpenseFragment()
-            activity?.let { it1 -> newFragment.show(it1.supportFragmentManager, "Availabilities") }
+            activity?.let { it1 -> newFragment.show(it1.supportFragmentManager, "") }
         }
 
         categoryButton.setOnClickListener{
-
+            val newFragment = NewCategoryFragment()
+            activity?.let { it1 -> newFragment.show(it1.supportFragmentManager, "") }
         }
         emailButton.setOnClickListener{
             val client = OkHttpClient()

@@ -35,11 +35,15 @@ class IncomeRecyclerAdapter(private var dataset: List<Income>): RecyclerView.Ada
     override fun getItemCount(): Int = dataset.size
 
     override fun onBindViewHolder(holder: IncomeRecyclerAdapter.ViewHolder, position: Int) {
+
+
+        val instance = SessionRepository(context =holder.name.context)
         val income  = dataset[position]
         holder.name.text = income.name
         holder.description.text = income.description
         holder.amount.text = "$${income.amount.toString()}"
         holder.category.text = income.category.toString()
+        holder.category.text = instance?.getCategories()?.filter { it.id==income.category }?.first()?.name.toString()
         //get category name instead but this is fine for now
 
     }

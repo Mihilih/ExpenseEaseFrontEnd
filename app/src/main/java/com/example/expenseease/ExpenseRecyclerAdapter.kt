@@ -11,6 +11,8 @@ import com.example.expenseease.data.Expense
 
 class ExpenseRecyclerAdapter(private var dataset: List<Expense>): RecyclerView.Adapter<ExpenseRecyclerAdapter.ViewHolder>()  {
 
+
+
     class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val name: TextView
         val amount: TextView
@@ -34,11 +36,15 @@ class ExpenseRecyclerAdapter(private var dataset: List<Expense>): RecyclerView.A
     override fun getItemCount(): Int = dataset.size
 
     override fun onBindViewHolder(holder: ExpenseRecyclerAdapter.ViewHolder, position: Int) {
+
+        val instance = SessionRepository(context =holder.name.context)
+
         val expense  = dataset[position]
         holder.name.text = expense.name
         holder.description.text = expense.description
         holder.amount.text = "$${expense.amount.toString()}"
-        holder.category.text = expense.category.toString()
+        holder.category.text = instance?.getCategories()?.filter { it.id==expense.category }?.first()?.name.toString()
+
         //get category name instead but this is fine for now
 
     }

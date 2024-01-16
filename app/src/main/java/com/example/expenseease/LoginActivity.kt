@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
                                 Log.e("LOGLOGLOG", instance.getSessionToken())
 
                                 instance.updateUser()
-
+                                instance.updateCategories()
 
 
 

@@ -67,49 +67,33 @@ class NewExpenseFragment() : DialogFragment() {
         val description : TextInputEditText = view.findViewById(R.id.description)
         val amount : TextInputEditText = view.findViewById(R.id.amount)
         val category : TextInputLayout = view.findViewById(R.id.dropDown2)
+
+        val instance = activity?.applicationContext?.let { SessionRepository(context = it) }
         var cat: Int? = null
         var isexpense: Boolean = true
-        val client = OkHttpClient()
-        val url = "http://34.29.154.243/api/categories/"
-        val instance = getActivity()?.let { it1 -> SessionRepository(context = it1.getApplicationContext()) }
 
-        val request = Request.Builder()
-            .url(url)
-            .build()
-        val response = client.newCall(request).enqueue(object :okhttp3.Callback{
-            override fun onFailure(call: Call, e: IOException) {
-                TODO("Not yet implemented")
+        val categories = instance?.getCategories()
+        val items1 = arrayListOf<String>()
+
+        val indexList = arrayListOf<Int>()
+        if (categories != null) {
+            for (cat in categories){
+                items1.add(cat.name)
+                indexList.add(cat.id)
+            }
+            getActivity()?.runOnUiThread{
+                val autoComplete: AutoCompleteTextView = view.findViewById(R.id.autoCompleteCategory)
+                val adapter1 =
+                    getActivity()?.let { ArrayAdapter(it.applicationContext, R.layout.list_item, items1) }
+                autoComplete.setAdapter(adapter1)
+                autoComplete.onItemClickListener = AdapterView.OnItemClickListener {
+                        adapterView, view, i, l ->
+                    val itemSelected = adapterView.getItemAtPosition(i)
+                    cat = indexList[i]
+                }
             }
 
-            override fun onResponse(call: Call, response: Response) {
-                val res = response.body?.string()
-
-                if (res != null) {
-                    Log.e("LOGLOGLOG", res)
-                }
-                val categories = parseCategory(res)
-                val items1 = arrayListOf<String>()
-                if (categories != null) {
-                    for (cat in categories){
-                        items1.add(cat.name)
-                    }
-                    getActivity()?.runOnUiThread{
-                        val autoComplete: AutoCompleteTextView = view.findViewById(R.id.autoCompleteCategory)
-                        val adapter1 =
-                            getActivity()?.let { ArrayAdapter(it.applicationContext, R.layout.list_item, items1) }
-                        autoComplete.setAdapter(adapter1)
-                        autoComplete.onItemClickListener = AdapterView.OnItemClickListener {
-                                adapterView, view, i, l ->
-                            val itemSelected = adapterView.getItemAtPosition(i)
-                            cat = items1.indexOf(itemSelected) + 1
-                        }
-                    }
-
-                }
-
-            }
-        })
-
+        }
 
 
         val dropDown: TextInputLayout = view.findViewById(R.id.dropDown)
