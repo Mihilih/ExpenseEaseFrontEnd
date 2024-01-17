@@ -89,11 +89,11 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/closeButton"
+        android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/montserratbold"
-        android:text="Close"
+        android:text="Delete"
         android:backgroundTint="@color/gray"
         android:textColor="@color/white"
         android:layout_marginBottom="100dp"

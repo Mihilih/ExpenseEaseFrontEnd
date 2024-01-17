@@ -57,6 +57,7 @@ class OverviewFragment : Fragment() {
         val pieChart: PieChart = view.findViewById(R.id.chart)
         val instance = getActivity()?.let { it1 -> SessionRepository(context = it1.getApplicationContext()) }
         var expenses = listOf<Expense>()
+        instance?.updateUser()
         val user = instance?.getUser()
         if (user != null) {
             expenses = user.expenses

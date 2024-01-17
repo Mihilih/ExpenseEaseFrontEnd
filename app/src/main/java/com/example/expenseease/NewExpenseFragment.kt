@@ -71,7 +71,7 @@ class NewExpenseFragment() : DialogFragment() {
         val instance = activity?.applicationContext?.let { SessionRepository(context = it) }
         var cat: Int? = null
         var isexpense: Boolean = true
-
+        instance?.updateCategories()
         val categories = instance?.getCategories()
         val items1 = arrayListOf<String>()
 
@@ -150,8 +150,10 @@ class NewExpenseFragment() : DialogFragment() {
                             Log.e("LOGLOGLOG", instance?.getSessionToken() ?:"")
                             if (!res.contains("error")){
                                 instance?.updateUser()
-                                dismiss()
+                                val intent = Intent(activity?.applicationContext, MainActivity::class.java)
+                                startActivity(intent)
                             }else if (res.contains("Authorization") or res.contains("session")){
+                                instance?.updateUser()
                                 val intent = Intent(activity?.applicationContext, OnboardingActivity::class.java)
                                 startActivity(intent)
                             }

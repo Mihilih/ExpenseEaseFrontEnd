@@ -56,7 +56,7 @@ class ExpenseRecyclerAdapter(private var dataset: List<Expense>): RecyclerView.A
             intent.putExtra("amount", expense.amount)
             intent.putExtra("id", expense.id)
             intent.putExtra("date", expense.date)
-            intent.putExtra("isexpense", false)
+            intent.putExtra("isexpense", true)
             holder.card.context.startActivity(intent)
         }
 

@@ -87,7 +87,9 @@ class NewCategoryFragment : DialogFragment() {
                         if (!res.contains("error")){
                             name.setText("")
                             instance?.updateCategories()
-                            Toast.makeText(activity?.applicationContext, "Created", Toast.LENGTH_SHORT).show()
+                            activity?.runOnUiThread{
+                                Toast.makeText(activity?.applicationContext, "Created", Toast.LENGTH_SHORT).show()
+                            }
 
                         }else if (res.contains("Authorization") or res.contains("session")){
                             val intent = Intent(activity?.applicationContext, OnboardingActivity::class.java)
