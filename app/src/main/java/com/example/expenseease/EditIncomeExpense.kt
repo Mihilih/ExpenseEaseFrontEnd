@@ -47,10 +47,7 @@ class EditIncomeExpense : AppCompatActivity() {
                 val adapter1 =ArrayAdapter(this, R.layout.list_item, items1)
                 autoComplete.setAdapter(adapter1)
 
-                Log.e("LOGLOGLOG", curr_cat.toString())
 
-                Log.e("LOGLOGLOG", indexList.toString())
-                Log.e("LOGLOGLOG", indexList.indexOf(curr_cat).toString())
                 autoComplete.listSelection = 2
                 //autoComplete.setText(items1[curr_cat!!])
                 autoComplete.onItemClickListener = AdapterView.OnItemClickListener {
@@ -71,9 +68,7 @@ class EditIncomeExpense : AppCompatActivity() {
                 url1="http://34.29.154.243/api/income/${id}"
             }
 
-            Log.e("LOGLOGLOG", url1)
             val user = instance?.getUser()
-            Log.e("LOGLOGLOG", isexpense.toString())
             val body: JSONObject = JSONObject()
             body.put("name", name.text.toString())
             body.put("description", description.text.toString())
@@ -82,7 +77,6 @@ class EditIncomeExpense : AppCompatActivity() {
             }
             body.put("category", curr_cat)
             body.put("amount", amount.text.toString().toInt())
-            Log.e("LOGLOGLOG", body.toString())
             val request = Request.Builder()
                 .url(url1)
                 .header("Authorization", "Bearer "+ (instance?.getSessionToken() ?:""))
@@ -90,15 +84,13 @@ class EditIncomeExpense : AppCompatActivity() {
                 .build()
             val response = client.newCall(request).enqueue(object :okhttp3.Callback{
                 override fun onFailure(call: Call, e: IOException) {
-                    Log.e("LOGLOGLOG", e.toString())
+                    Log.e("Log", e.toString())
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     val res = response.body?.string()
 
                     if (res != null) {
-                        Log.e("LOGLOGLOG", res)
-                        Log.e("LOGLOGLOG", instance?.getSessionToken() ?:"")
                         if (!res.contains("error")){
                             instance?.updateUser()
                             val intent = Intent(this@EditIncomeExpense, MainActivity::class.java)

@@ -61,7 +61,6 @@ class OverviewFragment : Fragment() {
         val user = instance?.getUser()
         if (user != null) {
             expenses = user.expenses
-            Log.e("LOGLOGLOG", expenses.toString())
         }
 
 
@@ -91,7 +90,6 @@ class OverviewFragment : Fragment() {
 
 
         expenses = expenses.sortedBy { it.category }
-        Log.e("LOGLOGLOGE", expenses.toString())
         val expenseGroup = arrayListOf<Pair<String, Int>>()
         var group = arrayListOf<Expense>()
         var sum = 0
@@ -118,7 +116,6 @@ class OverviewFragment : Fragment() {
             val cat = instance?.getCategories()?.filter { it.id==currentcat }?.first()
             expenseGroup.add(Pair<String, Int>(cat?.name.toString(), sum))
         }
-        Log.e("LOGLOGLOG", expenseGroup.toString())
 
 
         val entries: ArrayList<PieEntry> = ArrayList()
@@ -184,9 +181,6 @@ class OverviewFragment : Fragment() {
                 override fun onResponse(call: Call, response: Response) {
                     val res = response.body?.string()
 
-                    if (res != null) {
-                        Log.e("LOGLOGLOG", res)
-                    }
                     activity?.runOnUiThread{
                         Toast.makeText(activity?.applicationContext, "Sent email report successfully", Toast.LENGTH_SHORT).show()
                     }

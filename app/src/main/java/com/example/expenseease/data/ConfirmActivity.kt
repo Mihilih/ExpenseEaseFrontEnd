@@ -45,7 +45,6 @@ class ConfirmActivity : AppCompatActivity() {
                     val res = response.body?.string()
 
                     if (res != null) {
-                        Log.e("LOGLOGLOG", res)
                     }
                     if (instance != null) {
                         instance.deleteData()

@@ -57,7 +57,6 @@ class IncomeFragment : Fragment() {
         val user = instance?.getUser()
         if (user != null) {
             incomes = user.incomes
-            Log.e("LOGLOGLOG", incomes.toString())
         }
 
         val incomeGroup = arrayListOf<Pair<String, List<Income>>>()
@@ -96,8 +95,6 @@ class IncomeFragment : Fragment() {
             val moshi = Moshi.Builder().addLast(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory()).build()
             val jsonAdapter: JsonAdapter<User> = moshi.adapter(User::class.java)
             val parsedUser =  jsonAdapter.fromJson(res)
-            Log.e("LOGLOGLOG", "success")
-            Log.e("LOGLOGLOG", parsedUser.toString())
             return parsedUser
         }catch (x:Exception){
             Log.e("error", x.toString())

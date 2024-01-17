@@ -2,6 +2,7 @@ package com.example.expenseease
 
 
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.util.Log
 import com.example.expenseease.data.Category
@@ -48,7 +49,6 @@ data class SessionRepository@Inject constructor(val context: Context){
                 val res = response.body?.string()
 
                 if (res != null) {
-                    Log.e("LOGLOGLOG", res)
                     storeCategories(res)
                 }
 
@@ -67,14 +67,14 @@ data class SessionRepository@Inject constructor(val context: Context){
             .build()
         val response = client.newCall(request).enqueue(object :okhttp3.Callback{
             override fun onFailure(call: Call, e: IOException) {
-                TODO("Not yet implemented")
+                val intent = Intent(context, OnboardingActivity::class.java)
+                context.startActivity(intent)
             }
 
             override fun onResponse(call: Call, response: Response) {
                 val res = response.body?.string()
 
                 if (res != null) {
-                    Log.e("LOGLOGLOG", res)
                     storeUser(res)
                 }
             }
@@ -129,8 +129,6 @@ private fun parseSession(res : String?): SessionData? {
         val moshi = Moshi.Builder().addLast(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory()).build()
         val jsonAdapter: JsonAdapter<SessionData> = moshi.adapter(SessionData::class.java)
         val parsedSession =  jsonAdapter.fromJson(res)
-        Log.e("LOGLOGLOG", "success")
-        Log.e("LOGLOGLOG", parsedSession.toString())
         return parsedSession
     }catch (x:Exception){
         Log.e("Error", x.toString())
@@ -143,8 +141,6 @@ private fun parsePerson(res : String?): User? {
         val moshi = Moshi.Builder().addLast(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory()).build()
         val jsonAdapter: JsonAdapter<User> = moshi.adapter(User::class.java)
         val parsedUser =  jsonAdapter.fromJson(res)
-        Log.e("LOGLOGLOG", "success")
-        Log.e("LOGLOGLOG", parsedUser.toString())
         return parsedUser
     }catch (x:Exception){
         Log.e("error", x.toString())
@@ -158,11 +154,9 @@ private fun parseCategory(res : String?): List<Category>? {
         val categoryListType = Types.newParameterizedType(List::class.java, Category::class.java)
         val jsonAdapter: JsonAdapter<List<Category>> = moshi.adapter(categoryListType)
         val parsedUser =  jsonAdapter.fromJson(res)
-        Log.e("LOGLOGLOG", "success")
-        Log.e("LOGLOGLOG", parsedUser.toString())
         return parsedUser
     }catch (x:Exception){
-        Log.e("LOGLOGLOG", x.toString())
+        Log.e("Log", x.toString())
         return null
     }
 }

@@ -68,7 +68,6 @@ class NewCategoryFragment : DialogFragment() {
             val body: JSONObject = JSONObject()
             body.put("name", name.text.toString())
             body.put("isexpense", true)
-            Log.e("LOGLOGLOG", body.toString())
             val request = Request.Builder()
                 .url(url)
                 .header("Authorization", "Bearer "+ (instance?.getSessionToken() ?:""))
@@ -76,14 +75,13 @@ class NewCategoryFragment : DialogFragment() {
                 .build()
             val response = client.newCall(request).enqueue(object :okhttp3.Callback{
                 override fun onFailure(call: Call, e: IOException) {
-                    Log.e("LOGLOGLOG", e.toString())
+                    Log.e("Log", e.toString())
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     val res = response.body?.string()
 
                     if (res != null) {
-                        Log.e("LOGLOGLOG", res)
                         if (!res.contains("error")){
                             name.setText("")
                             instance?.updateCategories()

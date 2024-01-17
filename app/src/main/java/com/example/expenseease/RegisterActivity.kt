@@ -59,7 +59,6 @@ class RegisterActivity : AppCompatActivity() {
                 body.put("email", email.text.toString())
                 body.put("password", pw.text.toString())
                 body.put("amt", amt.text.toString().toInt())
-                Log.e("LOGLOGLOG", body.toString())
                 val request = Request.Builder()
                     .url(url)
                     .post(body.toString().toRequestBody(MEDIA_TYPE_JSON))
@@ -68,7 +67,6 @@ class RegisterActivity : AppCompatActivity() {
                 val response = client.newCall(request).enqueue(object :okhttp3.Callback{
                     override fun onFailure(call: Call, e: IOException) {
                         runOnUiThread{
-                            Log.e("LOGLOGLOG", e.toString())
                             Toast.makeText(this@RegisterActivity, "Failed to create user", Toast.LENGTH_SHORT).show()
 
                         }
@@ -113,7 +111,6 @@ class RegisterActivity : AppCompatActivity() {
 
                 val client = OkHttpClient()
                 val url = "http://34.29.154.243/api/users/${id}"
-                Log.e("LOGLOGLOG", body.toString())
                 val request = Request.Builder()
                     .url(url)
                     .header("Authorization", "Bearer "+ (instance?.getSessionToken() ?:""))
@@ -123,7 +120,6 @@ class RegisterActivity : AppCompatActivity() {
                 val response = client.newCall(request).enqueue(object :okhttp3.Callback{
                     override fun onFailure(call: Call, e: IOException) {
                         runOnUiThread{
-                            Log.e("LOGLOGLOG", e.toString())
                             Toast.makeText(this@RegisterActivity, "Failed to create user", Toast.LENGTH_SHORT).show()
 
                         }

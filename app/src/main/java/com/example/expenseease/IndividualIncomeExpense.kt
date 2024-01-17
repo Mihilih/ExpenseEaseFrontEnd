@@ -66,15 +66,13 @@ class IndividualIncomeExpense : AppCompatActivity() {
                 .build()
             val response = client.newCall(request).enqueue(object :okhttp3.Callback{
                 override fun onFailure(call: Call, e: IOException) {
-                    Log.e("LOGLOGLOG", e.toString())
+                    Log.e("Log", e.toString())
                 }
 
                 override fun onResponse(call: Call, response: Response) {
                     val res = response.body?.string()
 
                     if (res != null) {
-                        Log.e("LOGLOGLOG", res)
-                        Log.e("LOGLOGLOG", instance?.getSessionToken() ?:"")
                         if (!res.contains("error")){
                             instance?.updateUser()
                             val intent = Intent(this@IndividualIncomeExpense, MainActivity::class.java)

@@ -54,7 +54,6 @@ class ExpenseFragment : Fragment() {
         val user = instance?.getUser()
         if (user != null) {
             expenses = user.expenses
-            Log.e("LOGLOGLOG", expenses.toString())
         }
 
 
@@ -91,8 +90,6 @@ class ExpenseFragment : Fragment() {
             val moshi = Moshi.Builder().addLast(com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory()).build()
             val jsonAdapter: JsonAdapter<User> = moshi.adapter(User::class.java)
             val parsedUser =  jsonAdapter.fromJson(res)
-            Log.e("LOGLOGLOG", "success")
-            Log.e("LOGLOGLOG", parsedUser.toString())
             return parsedUser
         }catch (x:Exception){
             Log.e("error", x.toString())

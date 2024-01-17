@@ -122,7 +122,6 @@ class NewExpenseFragment() : DialogFragment() {
                 if (!isexpense){
                     url1="http://34.29.154.243/api/income/"
                 }
-                Log.e("LOGLOGLOG", isexpense.toString())
                 val body: JSONObject = JSONObject()
                 body.put("name", name.text.toString())
                 if (user != null) {
@@ -131,7 +130,6 @@ class NewExpenseFragment() : DialogFragment() {
                 body.put("description", description.text.toString())
                 body.put("category", cat)
                 body.put("amount", amount.text.toString().toInt())
-                Log.e("LOGLOGLOG", body.toString())
                 val request = Request.Builder()
                     .url(url1)
                     .header("Authorization", "Bearer "+ (instance?.getSessionToken() ?:""))
@@ -139,15 +137,13 @@ class NewExpenseFragment() : DialogFragment() {
                     .build()
                 val response = client.newCall(request).enqueue(object :okhttp3.Callback{
                     override fun onFailure(call: Call, e: IOException) {
-                        Log.e("LOGLOGLOG", e.toString())
+                        Log.e("Log", e.toString())
                     }
 
                     override fun onResponse(call: Call, response: Response) {
                         val res = response.body?.string()
 
                         if (res != null) {
-                            Log.e("LOGLOGLOG", res)
-                            Log.e("LOGLOGLOG", instance?.getSessionToken() ?:"")
                             if (!res.contains("error")){
                                 instance?.updateUser()
                                 val intent = Intent(activity?.applicationContext, MainActivity::class.java)
@@ -185,11 +181,9 @@ class NewExpenseFragment() : DialogFragment() {
             val categoryListType = Types.newParameterizedType(List::class.java, Category::class.java)
             val jsonAdapter: JsonAdapter<List<Category>> = moshi.adapter(categoryListType)
             val parsedUser =  jsonAdapter.fromJson(res)
-            Log.e("LOGLOGLOG", "success")
-            Log.e("LOGLOGLOG", parsedUser.toString())
             return parsedUser
         }catch (x:Exception){
-            Log.e("LOGLOGLOG", x.toString())
+            Log.e("Log", x.toString())
             return null
         }
     }

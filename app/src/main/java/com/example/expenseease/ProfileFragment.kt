@@ -77,9 +77,7 @@ class ProfileFragment : Fragment() {
                 override fun onResponse(call: Call, response: Response) {
                     val res = response.body?.string()
 
-                    if (res != null) {
-                        Log.e("LOGLOGLOG", res)
-                    }
+                    if (res != null) { }
                     if (instance != null) {
                         instance.deleteData()
                     }
@@ -103,7 +101,6 @@ class ProfileFragment : Fragment() {
             intent?.putExtra("email", user?.email)
             intent?.putExtra("amount", user?.current_balance)
             intent?.putExtra("id", user?.id)
-            Log.e("LOGLOGLOG" ,intent?.extras.toString())
             startActivity(intent)
         }
         return view

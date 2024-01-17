@@ -31,7 +31,6 @@ class LoginActivity : AppCompatActivity() {
             val body: JSONObject = JSONObject()
             body.put("email", email.text.toString())
             body.put("password", pw.text.toString())
-            Log.e("LOGLOGLOG", body.toString())
             val request = Request.Builder()
                 .url(url)
                 .post(body.toString().toRequestBody(RegisterActivity.MEDIA_TYPE_JSON))
@@ -40,7 +39,6 @@ class LoginActivity : AppCompatActivity() {
             val response = client.newCall(request).enqueue(object :okhttp3.Callback{
                 override fun onFailure(call: Call, e: IOException) {
                     runOnUiThread{
-                        Log.e("LOGLOGLOG", e.toString())
                         Toast.makeText(this@LoginActivity, "Failed to login user", Toast.LENGTH_SHORT).show()
 
                     }
@@ -57,7 +55,6 @@ class LoginActivity : AppCompatActivity() {
                                 //parse and store session details
                                 val instance = SessionRepository(context = this@LoginActivity)
                                 instance.storeData(res)
-                                Log.e("LOGLOGLOG", instance.getSessionToken())
 
                                 instance.updateUser()
                                 instance.updateCategories()
