@@ -140,7 +140,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/montserratbold"
-        android:text="Save"
+        android:text="@string/save"
         android:backgroundTint="@color/mint_green"
         android:textColor="@color/gray"
         app:layout_constraintTop_toBottomOf="@id/amtText"
